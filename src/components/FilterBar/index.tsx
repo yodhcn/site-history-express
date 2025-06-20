@@ -1,9 +1,9 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 
-import { MatchMode } from '@/common/mode';
-import { Domain } from '@/common/url';
-import { debounce } from '@/common/stream';
-import { i18n } from '@/common/i18n';
+import { MatchMode } from '@/utils/mode';
+import { Domain } from '@/utils/url';
+import { debounce } from '@/utils/stream';
+import { i18n } from '@/utils/i18n';
 
 export interface Props {
   domain: Domain;
@@ -47,10 +47,10 @@ export default function FilterBar({ domain, matchMode, onTextChange, onToggleMat
   }
 
   return (
-    <div className='flex items-center h-[40px] border-t border-[--color-border] shadow-lg shadow-[--color-text]'>
+    <div className='flex items-center h-[40px] border-t border-(--color-border) shadow-md shadow-(color:--color-text)'>
       <input
         ref={inputRef}
-        className='flex-auto bg-transparent outline-none border-none h-full px-3'
+        className='flex-auto bg-transparent outline-hidden border-none h-full px-3'
         style={{ caretColor: shouldHideCaret ? 'transparent' : undefined }}
         type='text'
         placeholder={placeholder}
@@ -61,7 +61,7 @@ export default function FilterBar({ domain, matchMode, onTextChange, onToggleMat
         onClick={() => setShouldHideCaret(false)}
       />
       {canToggleMatchMode && (
-        <button className='h-full p-3 outline-none opacity-30 hover:opacity-50' onClick={handleBtnClick}>
+        <button className='h-full p-3 outline-hidden opacity-30 hover:opacity-50' onClick={handleBtnClick}>
           {matchMode === MatchMode.Strict ? <StrictModeSvg /> : <LooseModeSvg />}
         </button>
       )}

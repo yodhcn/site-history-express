@@ -27,16 +27,20 @@ export function createDomainHistoryItems(): DomainHistoryItems {
 }
 
 export async function getHistoryItems(startTime: number): Promise<HistoryItem[]> {
-  const query: chrome.history.HistoryQuery = { text: '', maxResults: 0, startTime };
-  const items = await chrome.history.search(query);
+  const query: Browser.history.HistoryQuery = {
+    text: '',
+    maxResults: 0,
+    startTime,
+  };
+  const items = await browser.history.search(query);
   return items.filter(filterHistoryItem).map(resolveHistoryItem);
 }
 
-function filterHistoryItem(item: chrome.history.HistoryItem) {
+function filterHistoryItem(item: Browser.history.HistoryItem) {
   return item.url && item.url.startsWith('http');
 }
 
-function resolveHistoryItem(item: chrome.history.HistoryItem): HistoryItem {
+function resolveHistoryItem(item: Browser.history.HistoryItem): HistoryItem {
   const key = getItemKey(item);
   const domain = getCleanDomain(item.url || '');
   return {
@@ -48,6 +52,6 @@ function resolveHistoryItem(item: chrome.history.HistoryItem): HistoryItem {
   };
 }
 
-function getItemKey(item: chrome.history.HistoryItem): number {
+function getItemKey(item: Browser.history.HistoryItem): number {
   return fnv1a(`${item.title || ''}${getCleanUrl(item.url || '')}`);
 }

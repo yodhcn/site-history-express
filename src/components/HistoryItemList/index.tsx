@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { List, ListRowRenderer } from 'react-virtualized';
 
-import { HistoryItem } from '@/common/history';
-import { i18n } from '@/common/i18n';
+import { HistoryItem } from '@/utils/history';
+import { i18n } from '@/utils/i18n';
 import Item, { ITEM_HEIGHT } from './Item';
 
 export interface Props {
@@ -97,19 +97,19 @@ export default function HistoryItemList({ items, total, highlightedUrlSet }: Pro
 }
 
 async function openItem(item: HistoryItem, mustInNewTab?: boolean) {
-  const tabs = await chrome.tabs.query({ currentWindow: true });
+  const tabs = await browser.tabs.query({ currentWindow: true });
   const tabIndex = tabs.find((tab) => tab.url === item.url)?.index ?? -1;
   const isCurrentTabHttp = tabs.find((tab) => tab.active)?.url?.startsWith('http') ?? false;
   if (tabIndex > -1) {
-    chrome.tabs.highlight({
+    browser.tabs.highlight({
       tabs: tabIndex,
     });
   } else if (isCurrentTabHttp || mustInNewTab) {
-    chrome.tabs.create({
+    browser.tabs.create({
       url: item.url,
     });
   } else {
-    chrome.tabs.update({
+    browser.tabs.update({
       url: item.url,
     });
   }

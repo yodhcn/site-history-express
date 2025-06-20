@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
-import { HistoryItem } from '@/common/history';
-import { i18n } from '@/common/i18n';
-import { getFaviconUrl } from '@/common/favicon';
+import { HistoryItem } from '@/utils/history';
+import { getFaviconUrl } from '@/utils/favicon';
 
 export interface Props {
   item: HistoryItem;
@@ -34,8 +33,11 @@ export default function Item({ item, highlighted, selected, onClick, onMouseMidd
 
   return (
     <div
-      className='flex gap-3 items-center px-3 cursor-pointer hover:bg-[--color-bg-hover]'
-      style={{ height: ITEM_HEIGHT, backgroundColor: selected ? 'var(--color-bg-selected)' : '' }}
+      className='flex gap-3 items-center px-3 cursor-pointer hover:bg-(--color-bg-hover)'
+      style={{
+        height: ITEM_HEIGHT,
+        backgroundColor: selected ? 'var(--color-bg-selected)' : '',
+      }}
       title={hoverText}
       onClick={handleClick}
       onAuxClick={handleAuxClick}
@@ -46,7 +48,10 @@ export default function Item({ item, highlighted, selected, onClick, onMouseMidd
       <div className='flex-auto w-0'>
         <div
           className='truncate'
-          style={{ fontWeight: highlighted ? 'bold' : '', marginLeft: shouldAdjust ? '-0.5em' : '' }}
+          style={{
+            fontWeight: highlighted ? 'bold' : '',
+            marginLeft: shouldAdjust ? '-0.5em' : '',
+          }}
         >
           {title}
         </div>

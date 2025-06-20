@@ -1,13 +1,17 @@
 import { useEffect, useState, useMemo } from 'react';
 
-import { MatchMode, DEFAULT_MATCH_MODE, getMatchMode, updateMatchMode } from '@/common/mode';
-import { MessageKey, sendMessage } from '@/common/message';
-import { HistoryItem, DomainHistoryItems, createDomainHistoryItems } from '@/common/history';
-import HistoryItemList from '@/popup/component/HistoryItemList';
-import FilterBar from '@/popup/component/FilterBar';
+import { MatchMode, DEFAULT_MATCH_MODE, getMatchMode, updateMatchMode } from '@/utils/mode';
+import { MessageKey, sendMessage } from '@/utils/message';
+import { HistoryItem, DomainHistoryItems, createDomainHistoryItems } from '@/utils/history';
+import HistoryItemList from '@/components/HistoryItemList';
+import FilterBar from '@/components/FilterBar';
 
 export default function App() {
-  const [domainItems, setDomainItems] = useState<DomainHistoryItems>(createDomainHistoryItems());
+  const [domainItems, _setDomainItems] = useState<DomainHistoryItems>(createDomainHistoryItems());
+  const setDomainItems = (val: any) => {
+    console.log('setDomainItems', val);
+    _setDomainItems(val);
+  };
   const [filterText, setFilterText] = useState('');
   const [highlightedUrlSet, setHighlightedUrlSet] = useState<Set<string>>(new Set());
   const [matchMode, setMatchMode] = useState<MatchMode>(DEFAULT_MATCH_MODE);
@@ -77,6 +81,6 @@ async function getFullItems(): Promise<DomainHistoryItems> {
 }
 
 async function getHighlightedUrlSet(): Promise<Set<string>> {
-  const tabs = await chrome.tabs.query({ currentWindow: true });
+  const tabs = await browser.tabs.query({ currentWindow: true });
   return new Set(tabs.map((tab) => tab.url!));
 }

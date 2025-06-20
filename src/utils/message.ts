@@ -4,7 +4,7 @@ export enum MessageKey {
 }
 
 export async function sendMessage(key: MessageKey, payload?: any): Promise<any> {
-  const res = await chrome.runtime.sendMessage({ key, payload });
+  const res = await browser.runtime.sendMessage({ key, payload });
   if (!res) {
     throw new Error('No response');
   }
