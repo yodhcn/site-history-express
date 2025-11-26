@@ -1,10 +1,12 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 
 import { MatchMode, DEFAULT_MATCH_MODE, getMatchMode, updateMatchMode } from '@/common/mode';
 import { MessageKey, sendMessage } from '@/common/message';
 import { HistoryItem, DomainHistoryItems, createDomainHistoryItems } from '@/common/history';
 import HistoryItemList from '@/popup/component/HistoryItemList';
 import FilterBar from '@/popup/component/FilterBar';
+
+const MATCH_MODES = [MatchMode.Strict, MatchMode.Loose, MatchMode.All];
 
 export default function App() {
   const [domainItems, setDomainItems] = useState<DomainHistoryItems>(createDomainHistoryItems());
@@ -13,7 +15,13 @@ export default function App() {
   const [matchMode, setMatchMode] = useState<MatchMode>(DEFAULT_MATCH_MODE);
 
   const allItems = useMemo<HistoryItem[]>(() => {
-    return matchMode === MatchMode.Strict && domainItems.domain.main ? domainItems.sub : domainItems.main;
+    if (matchMode === MatchMode.All || !domainItems.isSite) {
+      return domainItems.all;
+    }
+    if (matchMode === MatchMode.Loose) {
+      return domainItems.main;
+    }
+    return domainItems.sub;
   }, [domainItems, matchMode]);
 
   const filteredItems = useMemo<HistoryItem[]>(() => {
@@ -50,15 +58,39 @@ export default function App() {
   }
 
   async function toggleMatchMode() {
-    const newMode = matchMode === MatchMode.Strict ? MatchMode.Loose : MatchMode.Strict;
+    if (!domainItems.isSite) {
+      return;
+    }
+    const newMode = MATCH_MODES[(MATCH_MODES.indexOf(matchMode) + 1) % MATCH_MODES.length];
     setMatchMode(newMode);
     await updateMatchMode(domainItems.domain.main, newMode);
   }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      toggleMatchMode();
+    }
+  }
+
+  const keydownHandlerRef = useRef(handleKeyDown);
+  useEffect(() => {
+    keydownHandlerRef.current = handleKeyDown;
+  });
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => keydownHandlerRef.current(event);
+    document.addEventListener('keydown', handler, true);
+    return () => {
+      document.removeEventListener('keydown', handler, true);
+    };
+  }, []);
 
   return (
     <div>
       <HistoryItemList items={filteredItems} total={allItems.length} highlightedUrlSet={highlightedUrlSet} />
       <FilterBar
+        isSite={domainItems.isSite || false}
         domain={domainItems.domain}
         matchMode={matchMode}
         onTextChange={setFilterText}

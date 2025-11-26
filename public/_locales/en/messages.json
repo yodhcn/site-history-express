@@ -20,7 +20,7 @@
     }
   },
   "filter_global_placeholder": {
-    "message": "Filter items"
+    "message": "Filter items on all sites"
   },
   "no_history": {
     "message": "No history"

@@ -10,19 +10,23 @@ export interface HistoryItem {
 }
 
 export interface DomainHistoryItems {
+  isSite?: boolean;
   domain: Domain;
   main: HistoryItem[];
   sub: HistoryItem[];
+  all: HistoryItem[];
 }
 
 export function createDomainHistoryItems(): DomainHistoryItems {
   return {
+    isSite: false,
     domain: {
       main: '',
       sub: '',
     },
     main: [],
     sub: [],
+    all: [],
   };
 }
 

@@ -9,7 +9,7 @@ const CHAR_CODE_DOT = '.'.charCodeAt(0);
 const CHAR_CODE_COL = ':'.charCodeAt(0);
 const MIN_IP_LEN = '0.0.0.0'.length;
 
-const COMMON_DOMAINS = new Set(['com', 'org', 'net', 'int', 'edu', 'gov', 'mil', 'ac']);
+const COMMON_DOMAINS = new Set(['com', 'org', 'net', 'int', 'edu', 'gov', 'mil', 'ac', 'co']);
 const REGION_DOMAINS = new Set([
   'ac',
   'ad',

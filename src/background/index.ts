@@ -63,25 +63,9 @@ function filterDomainItems(allItems: HistoryItem[], currentUrl: string, maxCount
   const keySet = new Set<number>();
   const urlSet = new Set<string>();
 
-  if (!currentUrl.startsWith('http')) {
-    for (const item of allItems) {
-      if (maxCount && items.main.length >= maxCount) {
-        break;
-      }
-      if (item.url === currentUrl) {
-        continue;
-      }
-      if (keySet.has(item.key) || urlSet.has(item.url)) {
-        continue;
-      }
-      keySet.add(item.key);
-      urlSet.add(item.url);
-      items.main.push(item);
-    }
-    return items;
-  }
-
+  items.isSite = currentUrl.startsWith('http');
   items.domain = getCleanDomain(currentUrl);
+
   for (const item of allItems) {
     if (maxCount && items.sub.length >= maxCount) {
       break;
@@ -89,11 +73,15 @@ function filterDomainItems(allItems: HistoryItem[], currentUrl: string, maxCount
     if (item.url === currentUrl) {
       continue;
     }
-    if (item.domain.main !== items.domain.main || keySet.has(item.key) || urlSet.has(item.url)) {
+    if (keySet.has(item.key) || urlSet.has(item.url)) {
       continue;
     }
     keySet.add(item.key);
     urlSet.add(item.url);
+    items.all.push(item);
+    if (item.domain.main !== items.domain.main) {
+      continue;
+    }
     if (!maxCount || items.main.length < maxCount) {
       items.main.push(item);
     }

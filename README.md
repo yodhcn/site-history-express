@@ -26,6 +26,7 @@ Keyboard shortcuts for super-fast navigation:
 - Jump Down: Shift + ArrowDown
 - Open: Enter
 - Open in New Tab: Shift + Enter
+- Toggle Filter Scope: Tab
 
 Set a custom keyboard shortcut to instantly open your history:
 

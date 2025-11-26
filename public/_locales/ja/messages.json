@@ -20,7 +20,7 @@
     }
   },
   "filter_global_placeholder": {
-    "message": "アイテムをフィルタ"
+    "message": "すべてのウェブサイトの履歴をフィルタ"
   },
   "no_history": {
     "message": "履歴がありません"

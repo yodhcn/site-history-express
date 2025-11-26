@@ -6,16 +6,16 @@ import { debounce } from '@/common/stream';
 import { i18n } from '@/common/i18n';
 
 export interface Props {
+  isSite: boolean;
   domain: Domain;
   matchMode: MatchMode;
   onTextChange: (text: string) => void;
   onToggleMatchMode: () => void;
 }
 
-export default function FilterBar({ domain, matchMode, onTextChange, onToggleMatchMode }: Props) {
-  const canToggleMatchMode = useMemo(() => !!domain.main, [domain]);
+export default function FilterBar({ isSite, domain, matchMode, onTextChange, onToggleMatchMode }: Props) {
   const placeholder = useMemo(() => {
-    if (!domain.main) {
+    if (matchMode === MatchMode.All || !isSite) {
       return i18n.filterGlobalPlaceholder;
     }
     if (matchMode === MatchMode.Strict) {
@@ -50,7 +50,7 @@ export default function FilterBar({ domain, matchMode, onTextChange, onToggleMat
     <div className='flex items-center h-[40px] border-t border-[--color-border] shadow-lg shadow-[--color-text]'>
       <input
         ref={inputRef}
-        className='flex-auto bg-transparent outline-none border-none h-full px-3'
+        className='flex-auto bg-transparent outline-none border-none h-full px-3 placeholder:text-current placeholder:opacity-50'
         style={{ caretColor: shouldHideCaret ? 'transparent' : undefined }}
         type='text'
         placeholder={placeholder}
@@ -60,49 +60,32 @@ export default function FilterBar({ domain, matchMode, onTextChange, onToggleMat
         onChange={handleTextChange}
         onClick={() => setShouldHideCaret(false)}
       />
-      {canToggleMatchMode && (
-        <button className='h-full p-3 outline-none opacity-30 hover:opacity-50' onClick={handleBtnClick}>
-          {matchMode === MatchMode.Strict ? <StrictModeSvg /> : <LooseModeSvg />}
+      {isSite && (
+        <button className='h-full p-3 outline-none opacity-50 hover:opacity-70' onClick={handleBtnClick}>
+          <GlobeSvg />
         </button>
       )}
     </div>
   );
 }
 
-function StrictModeSvg() {
+function GlobeSvg() {
   return (
     <svg
-      style={{ width: '16px', height: '16px' }}
+      xmlns='http://www.w3.org/2000/svg'
+      width='16'
+      height='16'
+      viewBox='0 0 24 24'
       fill='none'
       stroke='currentColor'
-      viewBox='0 0 24 24'
-      xmlns='http://www.w3.org/2000/svg'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      className='feather feather-globe'
     >
-      <path
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        strokeWidth='2'
-        d='M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'
-      ></path>
-    </svg>
-  );
-}
-
-function LooseModeSvg() {
-  return (
-    <svg
-      style={{ width: '16px', height: '16px' }}
-      fill='none'
-      stroke='currentColor'
-      viewBox='0 0 24 24'
-      xmlns='http://www.w3.org/2000/svg'
-    >
-      <path
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        strokeWidth='2'
-        d='M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5'
-      ></path>
+      <circle cx='12' cy='12' r='10'></circle>
+      <line x1='2' y1='12' x2='22' y2='12'></line>
+      <path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'></path>
     </svg>
   );
 }
